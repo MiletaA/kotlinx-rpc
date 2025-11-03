@@ -1085,9 +1085,20 @@ internal class RpcStubGenerator(
 
     /**
      * IR call of the `RpcType(KType, List<Annotation>)` function
+     * 
+     * KRPC-178: Now uses the RpcTypeProviderExtension system for custom descriptors
      */
     private fun irRpcTypeCall(type: IrType): IrConstructorCallImpl {
-        // todo change to extension after KRPC-178
+        // Try to use extension if available
+        val extension = RpcTypeProviderExtensionRegistry.getExtension(type)
+        if (extension != null) {
+            val result = extension.generateRpcTypeCall(type, ctx)
+            if (result is IrConstructorCallImpl) {
+                return result
+            }
+        }
+        
+        // Fallback to original implementation for backward compatibility
         val withSerializableAnnotations = type.annotations.any {
             it.type.isSerializableAnnotation()
         }

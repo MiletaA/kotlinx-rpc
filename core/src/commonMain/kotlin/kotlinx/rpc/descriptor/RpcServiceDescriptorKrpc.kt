@@ -12,8 +12,15 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KType
 
 /**
- * TODO KRPC-178 General Approach for custom Service Descriptors;
- *  Move to a custom descriptor later
+ * KRPC-specific RpcType implementation that includes serialization information.
+ * 
+ * KRPC-178 RESOLUTION: This class remains in core for backward compatibility,
+ * but the new [RpcTypeProvider] system should be used for custom descriptors.
+ * Protocol-specific implementations can now register their own providers
+ * using [RpcTypeProviderRegistry].
+ * 
+ * @see RpcTypeProvider for the extensible interface
+ * @see RpcTypeProviderRegistry for registering custom providers
  */
 @InternalRpcApi
 public class RpcTypeKrpc(
